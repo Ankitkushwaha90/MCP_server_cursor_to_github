@@ -80,30 +80,131 @@ curl http://localhost:3333
 
 
 
-# MCP_server_cursor_to_github
-https://smithery.ai/server/@smithery-ai/github
 
-cursor download for your operating system 
+---
+title: "MCP Server + GitHub Cursor Setup Guide"
+description: "Step-by-step guide for setting up MCP server with Cursor GitHub integration for repo automation, creation, deletion, and commit control."
+---
 
-and then github setting ->developer -> token -> generate-> auth -> users-> repository
+# 🚀 MCP Server + GitHub Cursor Integration
 
-Make sure to copy your token now as you will not be able to see it again.
+This tutorial walks you through setting up MCP with GitHub using Cursor and controlling repositories from the terminal or automation workflows.
 
-just_think
+## 📦 Prerequisites
 
-create new think my token
+- Node.js & npm installed
+- [Cursor CLI](https://smithery.ai/server/@smithery-ai/github) downloaded for your OS
+- A GitHub account
+- An MCP-compatible agent setup with `@modelcontextprotocol/sdk`
 
-Created today.
-Expires on Sun, May 18 2025
-Access on @Ankitkushwaha90 Ankitkushwaha90
-Repository access
-This token has access to all repositories owned by you.
-User permissions
- Read access to Copilot Chat, Copilot Editor Context, models, plan, private repository invitations, and user events
- Read and Write access to blocking, codespaces user secrets, email addresses, followers, gists, git signing ssh public keys, gpg keys, interaction limits, keys, profile, starring, user knowledge bases, and watching
-Repository permissions
- Read access to codespaces metadata and metadata
- Read and Write access to Dependabot alerts, actions, actions variables, administration, attestations api, code, codespaces, codespaces lifecycle admin, codespaces secrets, commit statuses, dependabot secrets, deployments, discussions, environments, issues, merge queues, pages, pull requests, repository advisories, repository custom properties, repository hooks, secret scanning alerts, secrets, security events, and workflows
+---
 
-write mdx page for good understanding for setup github and mcp and cursors . for create repo
-and other control from cursor to github account create delete communite and other write tutorial page
+## 🔐 Step 1: Create a GitHub Personal Access Token
+
+1. Go to [GitHub Developer Settings](https://github.com/settings/tokens)
+2. Click **"Fine-grained tokens" → Generate new token**
+3. Set:
+   - **Name**: `just_think`
+   - **Expiration**: May 18, 2025 (or your preferred)
+   - **Permissions**:
+     - **Repositories**: Full Read/Write
+     - **User**: Full Read/Write
+4. Copy the token now. You **will not** see it again!
+
+```text
+github_pat_11A4PP7FQ07lGRHVynbe5e_... (keep it secret!)
+```
+
+---
+
+## ⚙️ Step 2: Configure `mcp.json`
+
+```json
+{
+  "defaultClient": "ollama",
+  "ollama": {
+    "baseUrl": "http://localhost:11434",
+    "model": "llama2"
+  },
+  "github": {
+    "token": "<your_copied_github_token>"
+  },
+  "agent": {
+    "name": "DevOpsAgent",
+    "persona": "An automation assistant for GitHub repo management"
+  }
+}
+```
+
+Save it as `mcp.json` in your project folder.
+
+---
+
+## 💻 Step 3: Run the MCP Studio Server
+
+```js
+// server.js
+import { studio } from '@modelcontextprotocol/sdk/server/studio.js';
+
+studio.run({
+  config: './mcp.json',
+  port: 3333
+});
+```
+
+Then run:
+```bash
+node server.js
+```
+
+---
+
+## 🧠 Step 4: Connect Cursor to GitHub
+
+```bash
+npx -y @smithery/cli@latest install @smithery-ai/github --client claude --config mcp.json
+```
+
+This will install the GitHub Cursor adapter and register the token from `mcp.json`.
+
+---
+
+## 🔧 Step 5: Automate Repo Control via Cursor
+
+Use the terminal to create, delete, or manage GitHub repos:
+
+### ✅ Create a Repository
+```bash
+npx @smithery/cli ask "Create a new private repo called test-automation"
+```
+
+### ❌ Delete a Repository
+```bash
+npx @smithery/cli ask "Delete the repo named old-project"
+```
+
+### 📥 Commit Code
+```bash
+npx @smithery/cli ask "Commit all changes to the repo my-app with message 'Init commit'"
+```
+
+---
+
+## 📚 Use Cases
+
+- 🚀 **CI/CD Pipelines** – Deploy workflows via GitHub Actions
+- 🧠 **LLM Automation** – Agents can trigger repo events
+- 🛡 **Secure DevOps** – Use fine-grained tokens to maintain security
+- 🧰 **Full Dev Automation** – No manual clicking, fully terminal-driven
+
+---
+
+## 📎 Resources
+- [Cursor GitHub Adapter](https://smithery.ai/server/@smithery-ai/github)
+- [MCP SDK](https://npmjs.com/package/@modelcontextprotocol/sdk)
+- [Ollama Server](https://ollama.com)
+
+---
+
+If you'd like a complete ready-to-clone repo with these files, just ask and I’ll generate one!
+
